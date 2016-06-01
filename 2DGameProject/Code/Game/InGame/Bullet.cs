@@ -11,21 +11,34 @@ namespace GameProject2D
 {
     public class Bullet : CircleBody
     {
+        int bounceCount;
+
         Vector2 position { get { return midPoint; } set { midPoint = value; } }
         Vector2 movement { get; set; }
         
-        public Bullet(Vector2f position)
+        public Bullet(Vector2f position, int bounceCount)
             : base(position, 5F)
         {
             this.movement = new Vector2f(0F, 500F);
         }
 
-        public void update(float deltaTime)
+        public void preCollisionUpdate(float deltaTime)
         {
-            float speed = deltaTime;
-
-            position += speed * movement;
+            position += deltaTime * movement;
         }
+
+        protected override void OnCollision(Body other)
+        {
+            Vector2 nearestPoint;
+            if(other is LineSegmentBody)
+            {
+                LineSegmentBody lineSegment = other as LineSegmentBody;
+            }
+
+
+            // bounce if possible, else disappear
+        }
+
 
         public void draw(RenderWindow win, View view)
         {

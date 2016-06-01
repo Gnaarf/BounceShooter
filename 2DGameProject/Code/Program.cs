@@ -14,7 +14,7 @@ namespace GameProject2D
         static GameState prevGameState = GameState.MainMenu;
         static IGameState state;
 
-        static RenderWindow win;
+        public static RenderWindow win;
         static readonly Vector2 windowSize = new Vector2(800, 600);
         static View view;
         static GUI gui;

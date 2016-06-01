@@ -9,16 +9,17 @@ using SFML.Window;
 
 namespace GameProject2D
 {
-    public class LineBody : Body
+    public abstract class LineSegmentBody : Body
     {
         public Vector2 start { get; set; }
         private Vector2 _direction;
+        /// <summary> is always normalized </summary>
         public Vector2 direction { get { return _direction; } set { _direction = value.normalized; } }
         public float length { get; set; }
 
         public Vector2 end { get { return start + (length * direction); } }
 
-        public LineBody(Vector2 start, Vector2 end)
+        public LineSegmentBody(Vector2 start, Vector2 end)
         {
             this.start = start;
             this.length = Vector2.distance(start, end);
@@ -27,7 +28,7 @@ namespace GameProject2D
             debugDrawShape = new RectangleShape(new Vector2(1, 1));
         }
 
-        public LineBody(Vector2 start, Vector2 direction, float length)
+        public LineSegmentBody(Vector2 start, Vector2 direction, float length)
             : this(start, start + length * direction)
         {
         }

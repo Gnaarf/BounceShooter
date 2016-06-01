@@ -34,15 +34,19 @@ namespace GameProject2D
             }
 
             // build Map
-            float segmentAngle = 2F * Helper.PI / 6F;
-            for (float angle = 0F; angle < 2 * Helper.PI; angle += segmentAngle)
+            int numSegments = 6;
+            float segmentAngle = 2F * Helper.PI / (float)numSegments;
+            Vector2 midpoint = new Vector2(400, 300);
+            float radius = 300F;
+            for (int i = 0; i < numSegments; i++)
             {
-                Vector2 midpoint = new Vector2(400, 300);
-                Vector2 start = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * 300;
-                Vector2 end = new Vector2((float)Math.Cos(angle + segmentAngle), (float)Math.Sin(angle + segmentAngle)) * 300;
+                float angle = i * segmentAngle;
+                Vector2 start = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * radius;
+                float endAngle = angle + segmentAngle - Helper.PI / 20F;
+                Vector2 end = new Vector2((float)Math.Cos(endAngle), (float)Math.Sin(endAngle)) * radius;
                 start += midpoint;
                 end += midpoint;
-                LineBody borderSegment = new LineBody(start, end);
+                Wall borderSegment = new Wall(start, end);
 
                 bodies.Add(borderSegment);
             }
@@ -55,17 +59,24 @@ namespace GameProject2D
                 player.update(deltaTime);
             }
 
+            int wallCount = 0;
+
             foreach (Body b in bodies)
             {
                 b.resetCollision();
+
+                if (b is Wall)
+                    wallCount++;
             }
+
+            Console.WriteLine(wallCount);
 
             foreach (Body b1 in bodies)
             {
                 foreach (Body b2 in bodies)
                 {
                     if(b1 != b2)
-                        b1.checkCollision(b2);
+                        b1.checkAndInformCollision(b2);
                 }
             }
         }

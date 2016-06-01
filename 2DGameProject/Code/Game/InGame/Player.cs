@@ -18,14 +18,14 @@ namespace GameProject2D
 
         public int index;
 
-        public Player(Vector2f position, int index)
+        public Player(Vector2 position, int index)
             : base(position, 30F)
         {
             this.index = index;
 
             this.movement = new Vector2f(0F, 0F);
         }
-
+        
         public void update(float deltaTime)
         {
             if (index != 0)
@@ -33,11 +33,11 @@ namespace GameProject2D
 
             // move
             move(deltaTime);
-
+            
             // shoot
-            if(KeyboardInputManager.Downward(Keyboard.Key.Space))
+            if (KeyboardInputManager.Downward(Keyboard.Key.Space))
             {
-                Bullet bullet = new Bullet(midPoint);
+                Bullet bullet = new Bullet(midPoint, 0);
                 bullet.midPoint += Vector2.Down * (radius + bullet.radius);
 
                 Map.bodies.Add(bullet);
@@ -46,7 +46,7 @@ namespace GameProject2D
 
             foreach (Bullet bullet in bullets)
             {
-                bullet.update(deltaTime);
+                bullet.preCollisionUpdate(deltaTime);
             }
         }
 
@@ -76,6 +76,11 @@ namespace GameProject2D
                 position -= movement;
                 movement *= Vector2.Up;
             }
+        }
+
+        protected override void OnCollision(Body other)
+        {
+            // set to free position
         }
 
         public void draw(RenderWindow win, View view)

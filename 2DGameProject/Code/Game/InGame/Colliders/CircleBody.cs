@@ -9,7 +9,7 @@ using SFML.Window;
 
 namespace GameProject2D
 {
-    public class CircleBody : Body
+    public abstract class CircleBody : Body
     {
         public Vector2 midPoint { get; set; }
         public float radius { get; set; }
