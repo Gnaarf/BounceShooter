@@ -67,6 +67,7 @@
     <Compile Include="Code\Game\InGame\Player.cs" />
     <Compile Include="Code\Game\MainMenu\MainMenuState.cs" />
     <Compile Include="Code\GUI.cs" />
+    <Compile Include="Code\GamePadInputManager.cs" />
     <Compile Include="Code\Utility\GameTime.cs" />
     <Compile Include="Code\Utility\Helper.cs" />
     <Compile Include="Code\KeyboardInputManager.cs" />

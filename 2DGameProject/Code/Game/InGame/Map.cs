@@ -69,8 +69,6 @@ namespace GameProject2D
                     wallCount++;
             }
 
-            Console.WriteLine(wallCount);
-
             foreach (Body b1 in bodies)
             {
                 foreach (Body b2 in bodies)

@@ -10,8 +10,8 @@ namespace GameProject2D
 
         static bool running = true;
 
-        static GameState currentGameState = GameState.MainMenu;
-        static GameState prevGameState = GameState.MainMenu;
+        static GameState currentGameState = GameState.InGame;
+        static GameState prevGameState = GameState.InGame;
         static IGameState state;
 
         public static RenderWindow win;
@@ -47,6 +47,7 @@ namespace GameProject2D
             while (running && win.IsOpen())
             {
                 KeyboardInputManager.Update();
+                GamePadInputManager.Update();
 
                 // update GameTime
                 GameTime.Update();

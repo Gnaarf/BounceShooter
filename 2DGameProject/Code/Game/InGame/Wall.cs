@@ -19,7 +19,7 @@ namespace GameProject2D
         {
         }
 
-        protected override void OnCollision(Body other)
+        protected override void OnCollision(Body other, Vector2 approximateCollisionPoint)
         {
             //Make Particles appear and stuff
         }

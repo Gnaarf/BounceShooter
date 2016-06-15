@@ -20,24 +20,29 @@ namespace GameProject2D
 
         public bool checkCollision(Body other)
         {
+            Vector2 tmp = Vector2.Zero;
+            return checkCollision(other, ref tmp);
+        }
+
+        public bool checkCollision(Body other, ref Vector2 approximateCollisionPoint)
+        {
             bool isColliding = false;
-            Vector2 approximatedCollisionPoint = Vector2.Zero;
 
             if (this is CircleBody && other is CircleBody)
             {
-                isColliding = checkCollision(this as CircleBody, other as CircleBody, ref approximatedCollisionPoint);
+                isColliding = checkCollision(this as CircleBody, other as CircleBody, ref approximateCollisionPoint);
             }
             else if (this is LineSegmentBody && other is CircleBody)
             {
-                isColliding = checkCollision(this as LineSegmentBody, other as CircleBody, ref approximatedCollisionPoint);
+                isColliding = checkCollision(this as LineSegmentBody, other as CircleBody, ref approximateCollisionPoint);
             }
             else if (this is CircleBody && other is LineSegmentBody)
             {
-                isColliding = checkCollision(this as CircleBody, other as LineSegmentBody, ref approximatedCollisionPoint);
+                isColliding = checkCollision(this as CircleBody, other as LineSegmentBody, ref approximateCollisionPoint);
             }
             else if (this is LineSegmentBody && other is LineSegmentBody)
             {
-                isColliding = checkCollision(this as LineSegmentBody, other as LineSegmentBody, ref approximatedCollisionPoint);
+                isColliding = checkCollision(this as LineSegmentBody, other as LineSegmentBody, ref approximateCollisionPoint);
             }
 
             if (isColliding)
@@ -51,11 +56,13 @@ namespace GameProject2D
 
         public bool checkAndInformCollision(Body other)
         {
-            bool isColliding = checkCollision(other);
+            Vector2 approximateCollisionPoint = Vector2.Zero;
+
+            bool isColliding = checkCollision(other, ref approximateCollisionPoint);
 
             if (isColliding)
             {
-                OnCollision(other);
+                OnCollision(other, approximateCollisionPoint);
             }
 
             return isColliding;
@@ -84,29 +91,14 @@ namespace GameProject2D
         private static bool checkCollision(CircleBody circle, LineSegmentBody line, ref Vector2 approximateCollisionPoint)
         {
             // project circleMidpoint on supporting line
-            float projectedLength = Vector2.dot(circle.midPoint - line.start, line.direction);
+            approximateCollisionPoint = line.NearestPositionOnSegment(circle.midPoint);
 
             float circleRadius = circle.radius;
             float circleRadiusSqr = circleRadius * circleRadius;
-            if(projectedLength < 0)
-            {
-                approximateCollisionPoint = line.start;
-                return Vector2.distanceSqr(circle.midPoint, line.start) <= circleRadiusSqr;
-            }
-            else if (projectedLength > line.length)
-            {
-                approximateCollisionPoint = line.end;
-                return Vector2.distanceSqr(circle.midPoint, line.end) <= circleRadiusSqr;
-            }
-            else
-            {
-                Vector2 projectedPoint = line.start + (line.direction * projectedLength);
-                approximateCollisionPoint = projectedPoint;
-                return Vector2.distanceSqr(projectedPoint, circle.midPoint) <= circleRadiusSqr;
-            }
+            return Vector2.distanceSqr(circle.midPoint, approximateCollisionPoint) <= circleRadiusSqr;
         }
 
-        private static bool checkCollision(LineSegmentBody lineSeg1, LineSegmentBody lineSeg2, ref Vector2 approximatedCollisionPoint)
+        private static bool checkCollision(LineSegmentBody lineSeg1, LineSegmentBody lineSeg2, ref Vector2 approximateCollisionPoint)
         {
             Vector2 lineSeg1Start = lineSeg1.start;
             Vector2 lineSeg1End = lineSeg1.end;
@@ -117,7 +109,7 @@ namespace GameProject2D
             if(Math.Abs(Vector2.dot(lineSeg1.direction, lineSeg2.direction)) == 1)
             {
                 // check if collinear
-                if (Vector2.dot(lineSeg2Start - lineSeg1Start, lineSeg2.direction) == 0)
+                if (Vector2.dot(lineSeg2Start - lineSeg1Start, lineSeg1.direction.right) == 0)
                 {
                     //Projection of lineSeg2 onto lineSeg1's supporting line
                     float projectedStart = Vector2.dot(lineSeg2Start - lineSeg1Start, lineSeg1.direction);
@@ -160,7 +152,7 @@ namespace GameProject2D
             }
         }
 
-        protected abstract void OnCollision(Body other);
+        protected abstract void OnCollision(Body other, Vector2 approximateCollisionPoint);
 
         public abstract void debugDraw(RenderWindow win, View view);
     }

@@ -13,13 +13,17 @@ namespace GameProject2D
     {
         int bounceCount;
 
+        float speed;
         Vector2 position { get { return midPoint; } set { midPoint = value; } }
         Vector2 movement { get; set; }
         
-        public Bullet(Vector2f position, int bounceCount)
+        public Bullet(Vector2f position, Vector2 direction, int bounceCount)
             : base(position, 5F)
         {
-            this.movement = new Vector2f(0F, 500F);
+            this.bounceCount = bounceCount;
+
+            this.speed = 500F;
+            this.movement = direction * speed;
         }
 
         public void preCollisionUpdate(float deltaTime)
@@ -27,12 +31,12 @@ namespace GameProject2D
             position += deltaTime * movement;
         }
 
-        protected override void OnCollision(Body other)
+        protected override void OnCollision(Body other, Vector2 approximateCollisionPoint)
         {
-            Vector2 nearestPoint;
-            if(other is LineSegmentBody)
+            if(other is Wall)
             {
                 LineSegmentBody lineSegment = other as LineSegmentBody;
+
             }
 
 

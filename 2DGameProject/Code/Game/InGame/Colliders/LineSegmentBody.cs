@@ -33,6 +33,24 @@ namespace GameProject2D
         {
         }
 
+        public Vector2 NearestPositionOnSegment(Vector2 Position)
+        {
+            float projectedLength = Vector2.dot(Position - start, direction);
+            
+            if (projectedLength < 0)
+            {
+                return start;
+            }
+            else if (projectedLength > length)
+            {
+                return end;
+            }
+            else
+            {
+                return start + direction * projectedLength;
+            }
+        }
+
         public override void debugDraw(RenderWindow win, View view)
         {
             debugDrawShape.Position = start;
