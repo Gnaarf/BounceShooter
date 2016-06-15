@@ -37,6 +37,7 @@ namespace GameProject2D
             {
                 LineSegmentBody lineSegment = other as LineSegmentBody;
 
+                BodyManager.CacheForRemoval(this);
             }
 
 
@@ -51,7 +52,7 @@ namespace GameProject2D
 
         public void debugDraw(RenderWindow win, View view)
         {
-            base.debugDraw(win, view);
+            base.DebugDraw(win, view);
         }
     }
 }

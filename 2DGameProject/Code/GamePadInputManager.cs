@@ -1,11 +1,14 @@
 ﻿using SFML.Window;
 using System.Collections.Generic;
 
+/// <summary>
+/// A Wrapper-Class for the SFML.Window.Joystick. Better usability.
+/// </summary>
 namespace GameProject2D
 {
     public enum GamePadButton { A, B, X, Y, LB, RB, Select, Start, LT, RT, BUTTONNUM };
 
-    public class GamePadInputManager
+    public static class GamePadInputManager
     {
         public struct Input
         {

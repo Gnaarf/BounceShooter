@@ -22,9 +22,10 @@ namespace GameProject2D
             debugDrawShape = new CircleShape(radius);
         }
 
-        public override void debugDraw(RenderWindow win, View view)
+        public override void DebugDraw(RenderWindow win, View view)
         {
-            debugDrawShape.Position = midPoint - new Vector2(radius, radius);
+            debugDrawShape.Position = midPoint;
+            debugDrawShape.Origin = Vector2.One * radius;
 
             win.Draw(debugDrawShape);
 

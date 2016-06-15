@@ -24,9 +24,9 @@ namespace GameProject2D
             //Make Particles appear and stuff
         }
 
-        public override void debugDraw(RenderWindow win, View view)
+        public override void DebugDraw(RenderWindow win, View view)
         {
-            base.debugDraw(win, view);
+            base.DebugDraw(win, view);
         }
     }
 }

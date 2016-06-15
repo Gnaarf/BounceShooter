@@ -57,10 +57,12 @@
     <Compile Include="Code\AssetManager.cs" />
     <Compile Include="Code\Game\GameState.cs" />
     <Compile Include="Code\Game\IGameState.cs" />
+    <Compile Include="Code\Game\InGame\ColliderBodies\BodyManager.cs" />
+    <Compile Include="Code\Game\InGame\Updateable.cs" />
     <Compile Include="Code\Game\InGame\Wall.cs" />
-    <Compile Include="Code\Game\InGame\Colliders\CircleBody.cs" />
-    <Compile Include="Code\Game\InGame\Colliders\LineSegmentBody.cs" />
-    <Compile Include="Code\Game\InGame\Colliders\Body.cs" />
+    <Compile Include="Code\Game\InGame\ColliderBodies\CircleBody.cs" />
+    <Compile Include="Code\Game\InGame\ColliderBodies\LineSegmentBody.cs" />
+    <Compile Include="Code\Game\InGame\ColliderBodies\Body.cs" />
     <Compile Include="Code\Game\InGame\InGameState.cs" />
     <Compile Include="Code\Game\InGame\Map.cs" />
     <Compile Include="Code\Game\InGame\Bullet.cs" />

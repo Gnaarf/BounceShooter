@@ -1,7 +1,10 @@
 ﻿using SFML.Window;
 using System.Collections.Generic;
 
-public class KeyboardInputManager
+/// <summary>
+/// Wrapper Class for the SFML.Window.Keyboard. Better usability.
+/// </summary>
+public static class KeyboardInputManager
 {
     static bool isInitialized = false;
 

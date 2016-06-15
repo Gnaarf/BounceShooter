@@ -9,7 +9,7 @@ using SFML.Window;
 
 namespace GameProject2D
 {
-    public class Player : CircleBody
+    public class Player : CircleBody, Updateable
     {
         Vector2 position { get { return midPoint; } set { midPoint = value; } }
         Vector2 movement { get; set; }
@@ -29,7 +29,7 @@ namespace GameProject2D
             this.movement = new Vector2f(0F, 0F);
         }
         
-        public void update(float deltaTime)
+        public void Update(float deltaTime)
         {
             // move
             move(deltaTime);
@@ -38,10 +38,10 @@ namespace GameProject2D
             rotate(deltaTime);
 
             // shoot and update Bullets
-            shoot(deltaTime);
+            Shoot(deltaTime);
         }
 
-        private void shoot(float deltaTime)
+        private void Shoot(float deltaTime)
         {
             bool shootABullet = false;
 
@@ -60,7 +60,7 @@ namespace GameProject2D
                 Bullet bullet = new Bullet(midPoint, forward, 0);
                 bullet.midPoint += forward * (radius + bullet.radius);
 
-                Map.bodies.Add(bullet);
+                BodyManager.Add(bullet);
                 bullets.Add(bullet);
             }
 
@@ -145,12 +145,13 @@ namespace GameProject2D
             
         }
 
-        public override void debugDraw(RenderWindow win, View view)
+        public override void DebugDraw(RenderWindow win, View view)
         {
-            base.debugDraw(win, view);
+            base.DebugDraw(win, view);
             
             CircleShape forwardShape = new CircleShape(5);
-            forwardShape.Position = midPoint + 50 * forward - Vector2.One * 5;
+            forwardShape.Origin = Vector2.One * forwardShape.Radius;
+            forwardShape.Position = midPoint + 50 * forward;
             forwardShape.FillColor = Color.Blue;
             win.Draw(forwardShape);
         }

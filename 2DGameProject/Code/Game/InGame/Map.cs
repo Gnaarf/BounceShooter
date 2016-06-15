@@ -14,14 +14,10 @@ namespace GameProject2D
         List<Vector2> startpositions = new List<Vector2>();
         List<Player> players = new List<Player>();
 
-        public static List<Body> bodies = new List<Body>();
-
         public int index;
 
         public Map()
         {
-            bodies.Clear();
-
             startpositions.Add(new Vector2(300, 100));
             startpositions.Add(new Vector2(500, 500));
 
@@ -30,7 +26,7 @@ namespace GameProject2D
             {
                 Player player = new Player(startpositions[i], i);
                 players.Add(player);
-                bodies.Add(player);
+                BodyManager.Add(player);
             }
 
             // build Map
@@ -48,7 +44,7 @@ namespace GameProject2D
                 end += midpoint;
                 Wall borderSegment = new Wall(start, end);
 
-                bodies.Add(borderSegment);
+                BodyManager.Add(borderSegment);
             }
         }
 
@@ -56,27 +52,13 @@ namespace GameProject2D
         {
             foreach (Player player in players)
             {
-                player.update(deltaTime);
+
+                player.Update(deltaTime);
             }
 
-            int wallCount = 0;
+            BodyManager.CheckAndInformCollision();
 
-            foreach (Body b in bodies)
-            {
-                b.resetCollision();
-
-                if (b is Wall)
-                    wallCount++;
-            }
-
-            foreach (Body b1 in bodies)
-            {
-                foreach (Body b2 in bodies)
-                {
-                    if(b1 != b2)
-                        b1.checkAndInformCollision(b2);
-                }
-            }
+            BodyManager.RemoveCachedBodies();
         }
 
         public void draw(RenderWindow win, View view)
@@ -86,10 +68,7 @@ namespace GameProject2D
 
         public void debugDraw(RenderWindow win, View view)
         {
-            foreach (Body body in bodies)
-            {
-                body.debugDraw(win, view);
-            }
+            BodyManager.DebugDraw(win, view);
         }
     }
 }

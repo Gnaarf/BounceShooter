@@ -51,7 +51,7 @@ namespace GameProject2D
             }
         }
 
-        public override void debugDraw(RenderWindow win, View view)
+        public override void DebugDraw(RenderWindow win, View view)
         {
             debugDrawShape.Position = start;
             debugDrawShape.Scale = new Vector2f(length, 1);
