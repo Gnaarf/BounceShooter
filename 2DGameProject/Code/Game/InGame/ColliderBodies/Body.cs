@@ -87,7 +87,7 @@ namespace GameProject2D
             {
                 float distance = Vector2.distance(b1.midPoint, b2.midPoint);
                 float overlapSize = radiusSum - distance;
-                Vector2 direction = (b2.midPoint - b1.midPoint) / distance;
+                Vector2 direction = distance != 0 ? (b2.midPoint - b1.midPoint) / distance : Vector2.Zero;
                 approximateCollisionPoint = b1.midPoint + (b1.radius - overlapSize * 0.5F) * direction;
 
                 return true;

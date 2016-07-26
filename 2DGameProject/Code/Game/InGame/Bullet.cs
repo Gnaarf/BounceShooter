@@ -33,6 +33,11 @@ namespace GameProject2D
             position += deltaTime * movement;
 
             bounceOffNormals.Clear();
+
+            if(position.X < Map.LowerBorder.X || position.Y < Map.LowerBorder.Y || position.X > Map.UpperBorder.X || position.Y > Map.UpperBorder.Y)
+            {
+                BodyManager.Remove(this);
+            }
         }
 
         public void PostCollisionUpdate(float deltaTime)
@@ -42,6 +47,8 @@ namespace GameProject2D
             {
                 BounceOff();
                 bounceCount--;
+
+                position += deltaTime * movement;
             }
         }
 
@@ -63,7 +70,7 @@ namespace GameProject2D
                     if (approximateCollisionPoint == wall.start || approximateCollisionPoint == wall.end)
                     {
                         // IF the bullet collides with the endpoint of a wall, treat it like a point collision
-                        normal = (approximateCollisionPoint - midPoint).normalized;
+                        normal = (midPoint - approximateCollisionPoint).normalized;
                     }
                     else
                     {

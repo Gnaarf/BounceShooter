@@ -29,6 +29,8 @@ namespace GameProject2D
 
         Text ChargedBounceCount_Vis;
 
+        public static int Count;
+
         public Player(Vector2 position, int index)
             : base(position, 30F)
         {
@@ -38,8 +40,24 @@ namespace GameProject2D
 
             // drawing-stuff
             ChargedBounceCount_Vis = new Text("", AssetManager.GetFont(AssetManager.FontName.Calibri));
+
+            GamePadInputManager.UnregisterPadEvent += Destroy;
+
+            Count++;
+            Console.WriteLine("PlayerCount = " + Count);
         }
-        
+
+        private void Destroy(uint i)
+        {
+            if(index == i)
+            {
+                BodyManager.Remove(this);
+                GamePadInputManager.UnregisterPadEvent -= Destroy;
+                Count--;
+                Console.WriteLine("PlayerCount = " + Count);
+            }
+        }
+
         public void Update(float deltaTime)
         {
             // move
@@ -74,7 +92,7 @@ namespace GameProject2D
             }   
             if(isShooting)
             { 
-                Bullet bullet = new Bullet(midPoint, forward, (int)ChargedBounceCount);
+                Bullet bullet = new Bullet(midPoint, forward, (int)ChargedBounceCount + 100);
                 bullet.midPoint += forward * (radius + bullet.radius);
 
                 ChargedBounceCount = 0F;
@@ -153,10 +171,6 @@ namespace GameProject2D
 
         public void draw(RenderWindow win, View view)
         {
-            ChargedBounceCount_Vis.DisplayedString = "" + ChargedBounceCount;
-            ChargedBounceCount_Vis.Position = midPoint;
-
-            win.Draw(ChargedBounceCount_Vis);
         }
 
         public override void DebugDraw(RenderWindow win, View view)
@@ -168,6 +182,10 @@ namespace GameProject2D
             forwardShape.Position = midPoint + 50 * forward;
             forwardShape.FillColor = Color.Blue;
             win.Draw(forwardShape);
+
+            ChargedBounceCount_Vis.DisplayedString = "" + ChargedBounceCount;
+            ChargedBounceCount_Vis.Position = midPoint;
+            win.Draw(ChargedBounceCount_Vis);
         }
     }
 }

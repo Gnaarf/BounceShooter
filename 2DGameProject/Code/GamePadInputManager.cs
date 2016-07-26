@@ -24,19 +24,25 @@ namespace GameProject2D
 
         private const float deadZone = 0.1F;
 
-        private static Dictionary<uint, Input> padInputs;
+        private static Dictionary<uint, Input> padInputs = new Dictionary<uint, Input>();
 
 
-        public static readonly int numSupportedPads = 8;
+        public static readonly int numSupportedPads = 15;
 
         public static int numConnectedPads { get; private set; }
 
         public static Dictionary<uint, Input>.KeyCollection connectedPadIndices { get { return padInputs.Keys; } }
 
+        
+        public delegate void PadEventHandler(uint index);
+
+        public static event PadEventHandler RegisterPadEvent;
+        public static event PadEventHandler UnregisterPadEvent;
+
 
         static void Initialize()
         {
-            padInputs = new Dictionary<uint, Input>();
+            padInputs.Clear();
 
             Joystick.Update();
 
@@ -66,11 +72,15 @@ namespace GameProject2D
             input.rightStick = new Vector2(0, 0);
 
             padInputs[i] = input;
+
+            RegisterPadEvent?.Invoke(i);
         }
 
         private static void UnregisterPad(uint i)
         {
             numConnectedPads--;
+
+            UnregisterPadEvent?.Invoke(i);
 
             padInputs.Remove(i);
         }
