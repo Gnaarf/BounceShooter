@@ -42,7 +42,7 @@ namespace GameProject2D
             GameTime.Start();
 
             // debug Text
-            Text debugText = new Text("debug Text", new Font("Fonts/calibri.ttf"));
+            Text debugText = new Text("debug Text", AssetManager.GetFont(AssetManager.FontName.Calibri));
 
             while (running && win.IsOpen())
             {

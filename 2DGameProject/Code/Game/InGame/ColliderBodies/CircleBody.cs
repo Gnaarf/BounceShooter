@@ -15,6 +15,7 @@ namespace GameProject2D
         public float radius { get; set; }
         
         public CircleBody(Vector2 midPoint, float radius)
+            : base()
         {
             this.midPoint = midPoint;
             this.radius = radius;

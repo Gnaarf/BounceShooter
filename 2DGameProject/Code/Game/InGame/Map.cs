@@ -26,7 +26,6 @@ namespace GameProject2D
             {
                 Player player = new Player(startpositions[i], i);
                 players.Add(player);
-                BodyManager.Add(player);
             }
 
             // build Map
@@ -38,32 +37,25 @@ namespace GameProject2D
             {
                 float angle = i * segmentAngle;
                 Vector2 start = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * radius;
-                float endAngle = angle + segmentAngle - Helper.PI / 20F;
+                float endAngle = angle + segmentAngle;
                 Vector2 end = new Vector2((float)Math.Cos(endAngle), (float)Math.Sin(endAngle)) * radius;
                 start += midpoint;
                 end += midpoint;
                 Wall borderSegment = new Wall(start, end);
-
-                BodyManager.Add(borderSegment);
             }
         }
 
         public void update(float deltaTime)
         {
-            foreach (Player player in players)
-            {
-
-                player.Update(deltaTime);
-            }
-
-            BodyManager.CheckAndInformCollision();
-
-            BodyManager.RemoveCachedBodies();
+            BodyManager.Update(deltaTime);
         }
 
         public void draw(RenderWindow win, View view)
         {
-            
+            foreach(Player player in players)
+            {
+                player.draw(win, view);
+            }
         }
 
         public void debugDraw(RenderWindow win, View view)

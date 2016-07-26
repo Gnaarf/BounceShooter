@@ -13,6 +13,7 @@ namespace GameProject2D
     {
         private static List<Body> bodies = new List<Body>();
         private static List<Body> cachedForRemoval = new List<Body>();
+        private static List<Body> cachedForAddition = new List<Body>();
 
         public static void Initialize()
         {
@@ -20,29 +21,75 @@ namespace GameProject2D
             cachedForRemoval.Clear();
         }
 
+        public static void Update(float deltaTime)
+        {
+
+            foreach (Body body in bodies)
+            {
+                Updateable up = body as Updateable;
+
+                if(body is Updateable)
+                {
+                    ((Updateable)body).Update(deltaTime);
+                }
+            }
+
+            AddCachedBodies();
+
+            CheckAndInformCollision();
+
+            foreach(Body body in bodies)
+            {
+                PostCollisionUpdatable updatable = body as PostCollisionUpdatable;
+                if (updatable != null)
+                {
+                    updatable.PostCollisionUpdate(deltaTime);
+                }
+            }
+
+            RemoveCachedBodies();
+        }
+
         /// <summary>
         /// will be removed at end of frame
         /// </summary>
         /// <param name="body"></param>
-        public static void CacheForRemoval(Body body)
+        public static void Remove(Body body)
         {
             cachedForRemoval.Add(body);
         }
 
         public static void Add(Body body)
         {
-            bodies.Add(body);
+
+            cachedForAddition.Add(body);
         }
 
-        public static void RemoveCachedBodies()
+        public static bool Contains(Body body)
         {
-            foreach(Body toBeRemoved in cachedForRemoval)
+            return bodies.Contains(body);
+        }
+
+        private static void RemoveCachedBodies()
+        {
+            foreach (Body toBeRemoved in cachedForRemoval)
             {
+                Console.WriteLine("Rem" + toBeRemoved);
                 bodies.Remove(toBeRemoved);
             }
+            cachedForRemoval.Clear();
         }
 
-        public static void CheckAndInformCollision()
+        private static void AddCachedBodies()
+        {
+            foreach (Body toBeAdded in cachedForAddition)
+            {
+                bodies.Add(toBeAdded);
+            }
+            cachedForAddition.Clear();
+        }
+
+        private static void CheckAndInformCollision()
         {
             foreach (Body b in bodies)
             {
@@ -54,12 +101,6 @@ namespace GameProject2D
                 for(int j = i + 1; j < bodies.Count; j++)
                 {
                     bodies[i].CheckAndInformCollision(bodies[j]);
-                }
-            }
-            foreach (Body b1 in bodies)
-            {
-                foreach (Body b2 in bodies)
-                {
                 }
             }
         }

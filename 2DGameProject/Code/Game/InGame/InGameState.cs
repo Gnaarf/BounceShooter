@@ -22,8 +22,8 @@ namespace GameProject2D
 
         public void Draw(RenderWindow win, View view, float deltaTime)
         {
-            map.draw(win, view);
             map.debugDraw(win, view);
+            map.draw(win, view);
         }
 
         public void DrawGUI(GUI gui, float deltaTime)

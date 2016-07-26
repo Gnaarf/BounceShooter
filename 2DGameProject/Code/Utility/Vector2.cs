@@ -91,12 +91,6 @@ public struct Vector2
         } 
     }
 
-    public Vector2 normalize() 
-    {
-        float l = length;
-        return this /= l; 
-    }
-
     /// <summary>returs a vector rotated around the given angle</summary>
     public Vector2 rotate(float angle)
     {
@@ -135,6 +129,16 @@ public struct Vector2
             sum += values[i];
         }
         return sum;
+    }
+
+    public static Vector2 project(Vector2 projectThis, Vector2 onThat)
+    {
+        return dot(projectThis, onThat.normalized) * onThat;
+    }
+
+    public static Vector2 reflect(Vector2 reflectThis, Vector2 normal)
+    {
+        return Vector2.project(-reflectThis, normal) * 2 + reflectThis;
     }
 
     public static float distance(Vector2 v1, Vector2 v2)

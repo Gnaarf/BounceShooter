@@ -11,6 +11,7 @@ namespace GameProject2D
 {
     public class Player : CircleBody, Updateable
     {
+        // game logic stuff
         Vector2 position { get { return midPoint; } set { midPoint = value; } }
         Vector2 movement { get; set; }
         Vector2 forward { get; set; } = Vector2.Up;
@@ -21,12 +22,22 @@ namespace GameProject2D
 
         public int index;
 
+        float ChargedBounceCount = 0F;
+        float ChargingSpeed = 5.2F;
+
+        // visualization stuff
+
+        Text ChargedBounceCount_Vis;
+
         public Player(Vector2 position, int index)
             : base(position, 30F)
         {
             this.index = index;
 
             this.movement = new Vector2f(0F, 0F);
+
+            // drawing-stuff
+            ChargedBounceCount_Vis = new Text("", AssetManager.GetFont(AssetManager.FontName.Calibri));
         }
         
         public void Update(float deltaTime)
@@ -43,30 +54,30 @@ namespace GameProject2D
 
         private void Shoot(float deltaTime)
         {
-            bool shootABullet = false;
+            bool isCharging = false;
+            bool isShooting = false;
 
             if (GamePadInputManager.IsConnected(index))
             {
-                shootABullet = GamePadInputManager.Downward(GamePadButton.RB, index);
+                isCharging = GamePadInputManager.IsPressed(GamePadButton.RB, index);
+                isShooting = GamePadInputManager.Upward(GamePadButton.RB, index);
             }
             else if(index == 0)
             {
-                shootABullet = KeyboardInputManager.Downward(Keyboard.Key.Space);
+                isCharging = KeyboardInputManager.IsPressed(Keyboard.Key.Space);
+                isShooting = KeyboardInputManager.Upward(Keyboard.Key.Space);
             }
 
-
-            if(shootABullet)
+            if(isCharging)
+            {
+                ChargedBounceCount += deltaTime * ChargingSpeed / (ChargedBounceCount + 1);
+            }   
+            if(isShooting)
             { 
-                Bullet bullet = new Bullet(midPoint, forward, 0);
+                Bullet bullet = new Bullet(midPoint, forward, (int)ChargedBounceCount);
                 bullet.midPoint += forward * (radius + bullet.radius);
 
-                BodyManager.Add(bullet);
-                bullets.Add(bullet);
-            }
-
-            foreach (Bullet bullet in bullets)
-            {
-                bullet.preCollisionUpdate(deltaTime);
+                ChargedBounceCount = 0F;
             }
         }
 
@@ -78,7 +89,7 @@ namespace GameProject2D
                 if(input != Vector2.Zero)
                 {
                     forward = input * new Vector2(1, -1);
-                    forward = forward.normalize();
+                    forward = forward.normalized;
                 }
             }
             else if (index == 0)
@@ -102,7 +113,7 @@ namespace GameProject2D
                 Vector2 inputMovement = GamePadInputManager.GetLeftStick(index) * new Vector2(1, -1);
                 if (inputMovement.lengthSqr > 1F)
                 {
-                    inputMovement.normalize();
+                    inputMovement = inputMovement.normalized;
                 }
                 movement = inputMovement * speed;
 
@@ -120,7 +131,7 @@ namespace GameProject2D
 
                 if (inputMovement.lengthSqr > 1F)
                 {
-                    inputMovement.normalize();
+                    inputMovement = inputMovement.normalized;
                 }
                 movement = inputMovement * speed;
 
@@ -142,7 +153,10 @@ namespace GameProject2D
 
         public void draw(RenderWindow win, View view)
         {
-            
+            ChargedBounceCount_Vis.DisplayedString = "" + ChargedBounceCount;
+            ChargedBounceCount_Vis.Position = midPoint;
+
+            win.Draw(ChargedBounceCount_Vis);
         }
 
         public override void DebugDraw(RenderWindow win, View view)

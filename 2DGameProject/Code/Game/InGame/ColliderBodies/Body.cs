@@ -13,6 +13,12 @@ namespace GameProject2D
     {
         protected Shape debugDrawShape;
 
+        public Body()
+        {
+            Console.WriteLine("Creating: " + this);
+            BodyManager.Add(this);
+        }
+
         public void ResetCollision()
         {
             debugDrawShape.FillColor = Color.Black;
