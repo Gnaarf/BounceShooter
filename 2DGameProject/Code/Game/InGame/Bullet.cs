@@ -17,6 +17,10 @@ namespace GameProject2D
         Vector2 position { get { return midPoint; } set { midPoint = value; } }
         Vector2 movement { get; set; }
 
+        float _damage = 10F;
+        public float damage { get { return _damage; } }
+        
+
         List<Vector2> bounceOffNormals = new List<Vector2>();
         
         public Bullet(Vector2f position, Vector2 direction, int bounceCount)
@@ -34,7 +38,7 @@ namespace GameProject2D
 
             bounceOffNormals.Clear();
 
-            if(position.X < Map.LowerBorder.X || position.Y < Map.LowerBorder.Y || position.X > Map.UpperBorder.X || position.Y > Map.UpperBorder.Y)
+            if(position.x < Map.lowerBorder.x || position.y < Map.lowerBorder.y || position.x > Map.upperBorder.x || position.y > Map.upperBorder.y)
             {
                 BodyManager.Remove(this);
             }
@@ -54,7 +58,21 @@ namespace GameProject2D
 
         protected override void OnCollision(Body other, Vector2 approximateCollisionPoint)
         {
-            if(other is Wall)
+            if(other is Player && !((Player)other).isDead)
+            {
+                // remove if no bounces left
+                if (bounceCount <= 0)
+                {
+                    BodyManager.Remove(this);
+                }
+                else
+                {
+                    CircleBody player = other as CircleBody;
+
+                    bounceOffNormals.Add((midPoint - player.midPoint).normalized);
+                }
+            }
+            else if(other is Wall)
             {
                 // remove if no bounces left
                 if (bounceCount <= 0)
@@ -77,7 +95,7 @@ namespace GameProject2D
                         // ELSE decide on which side of the wall the bullet was before the collision
                         normal = wall.direction.right;
 
-                        if (Vector2.dot((midPoint - movement) - approximateCollisionPoint, normal) < 0)
+                        if (Vector2.Dot((midPoint - movement) - approximateCollisionPoint, normal) < 0)
                         {
                             normal *= -1;
                         }
@@ -91,9 +109,9 @@ namespace GameProject2D
 
         private void BounceOff()
         {
-            Vector2 averageNormal = Vector2.average(bounceOffNormals.ToArray());
+            Vector2 averageNormal = Vector2.Average(bounceOffNormals.ToArray());
 
-            movement = Vector2.reflect(movement, averageNormal);
+            movement = Vector2.Reflect(movement, averageNormal);
             movement = movement.normalized * speed;
         }
 

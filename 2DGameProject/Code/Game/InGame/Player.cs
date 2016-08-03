@@ -9,7 +9,7 @@ using SFML.Window;
 
 namespace GameProject2D
 {
-    public class Player : CircleBody, Updateable
+    public class Player : CircleBody, Updateable, Drawable
     {
         // game logic stuff
         Vector2 position { get { return midPoint; } set { midPoint = value; } }
@@ -18,16 +18,22 @@ namespace GameProject2D
 
         float speed = 300F;
 
-        List<Bullet> bullets = new List<Bullet>();
-
         public int index;
 
-        float ChargedBounceCount = 0F;
-        float ChargingSpeed = 5.2F;
+        float chargedBounceCount = 0F;
+        float chargingSpeed = 10.2F;
+
+        public static readonly float MaxLife = 100F;
+        float life = MaxLife;
+        public bool isDead { get { return life <= 0F; } }
+
+        public static readonly float ReviveTime = 5F;
+        float reviveCountdown = 0F;
 
         // visualization stuff
+        Text DebugText;
 
-        Text ChargedBounceCount_Vis;
+        Sprite sprite;
 
         public static int Count;
 
@@ -39,8 +45,13 @@ namespace GameProject2D
             this.movement = new Vector2f(0F, 0F);
 
             // drawing-stuff
-            ChargedBounceCount_Vis = new Text("", AssetManager.GetFont(AssetManager.FontName.Calibri));
+            DebugText = new Text("", AssetManager.GetFont(AssetManager.FontName.Calibri));
 
+            sprite = new Sprite(AssetManager.GetTexture(AssetManager.TextureName.Player));
+            sprite.Origin = ((Vector2) sprite.Texture.Size) * 0.5F;
+            sprite.Scale = (2 * this.radius * Vector2.One) / (Vector2)sprite.Texture.Size;
+
+            // other stuff
             GamePadInputManager.UnregisterPadEvent += Destroy;
 
             Count++;
@@ -61,13 +72,24 @@ namespace GameProject2D
         public void Update(float deltaTime)
         {
             // move
-            move(deltaTime);
+            Move(deltaTime);
 
             // rotate
-            rotate(deltaTime);
+            Rotate(deltaTime);
 
-            // shoot and update Bullets
-            Shoot(deltaTime);
+            if (!isDead)
+            {
+                // shoot and update Bullets
+                Shoot(deltaTime);
+            }
+            else
+            {
+                reviveCountdown -= deltaTime;
+                if(reviveCountdown <= 0F)
+                {
+                    Revive();
+                }
+            }
         }
 
         private void Shoot(float deltaTime)
@@ -88,18 +110,18 @@ namespace GameProject2D
 
             if(isCharging)
             {
-                ChargedBounceCount += deltaTime * ChargingSpeed / (ChargedBounceCount + 1);
+                chargedBounceCount += deltaTime * chargingSpeed / (chargedBounceCount + 1);
             }   
             if(isShooting)
             { 
-                Bullet bullet = new Bullet(midPoint, forward, (int)ChargedBounceCount + 100);
-                bullet.midPoint += forward * (radius + bullet.radius);
+                Bullet bullet = new Bullet(midPoint, forward, (int)chargedBounceCount + 1);
+                bullet.midPoint += forward * (radius + bullet.radius + 1);
 
-                ChargedBounceCount = 0F;
+                chargedBounceCount = 0F;
             }
         }
 
-        private void rotate(float deltaTime)
+        private void Rotate(float deltaTime)
         {
             if (GamePadInputManager.IsConnected(index))
             {
@@ -123,9 +145,8 @@ namespace GameProject2D
             }
         }
 
-        private void move(float deltaTime)
+        private void Move(float deltaTime)
         {
-
             if (GamePadInputManager.IsConnected(index))
             {
                 Vector2 inputMovement = GamePadInputManager.GetLeftStick(index) * new Vector2(1, -1);
@@ -161,31 +182,77 @@ namespace GameProject2D
         {
             if(other is Wall)
             {
+                // can't walk through walls
                 Vector2 pushVector = approximateCollisionPoint - position;
 
                 float distance = pushVector.length;
 
                 position -= (pushVector / distance) * (0.1F + radius - distance);
             }
+            else if (other is Player)
+            {
+                // can't walk through players
+                Player otherPlayer = other as Player;
+
+                position = approximateCollisionPoint + (position - approximateCollisionPoint).normalized * radius;
+            }
+            else if (other is Bullet)
+            {
+                // get hit by bullet
+                if (!isDead)
+                {
+                    RecieveDamage(((Bullet)other).damage);
+                }
+            }
         }
 
-        public void draw(RenderWindow win, View view)
+        private void RecieveDamage(float damage)
         {
+            life -= damage;
+            if (isDead)
+            {
+                reviveCountdown = ReviveTime;
+            }
+        }
+        
+        private void Revive()
+        {
+            life = MaxLife;
+        }
+
+        public void Draw(RenderWindow win, View view)
+        {
+            sprite.Position = position;
+            sprite.Rotation = forward.rotation * Helper.RadianToDegree;
+            sprite.Color = Helper.Lerp(Color.White, Color.Transparent, isDead ? 1.0F : 0.5F);
+
+            win.Draw(sprite);
         }
 
         public override void DebugDraw(RenderWindow win, View view)
         {
             base.DebugDraw(win, view);
-            
-            CircleShape forwardShape = new CircleShape(5);
-            forwardShape.Origin = Vector2.One * forwardShape.Radius;
-            forwardShape.Position = midPoint + 50 * forward;
-            forwardShape.FillColor = Color.Blue;
-            win.Draw(forwardShape);
 
-            ChargedBounceCount_Vis.DisplayedString = "" + ChargedBounceCount;
-            ChargedBounceCount_Vis.Position = midPoint;
-            win.Draw(ChargedBounceCount_Vis);
+            if (!isDead)
+            {
+                CircleShape forwardShape = new CircleShape(5);
+                forwardShape.Origin = Vector2.One * forwardShape.Radius;
+                forwardShape.Position = midPoint + 50 * forward;
+                forwardShape.FillColor = Color.Blue;
+                win.Draw(forwardShape);
+            }
+
+            if (isDead)
+            {
+                DebugText.DisplayedString = "" + ((int)reviveCountdown + 1);
+            }
+            else
+            {
+                DebugText.DisplayedString = "" + (int)chargedBounceCount;
+            }
+            FloatRect TextRect = DebugText.GetGlobalBounds();
+            DebugText.Position = midPoint - new Vector2(TextRect.Width, (TextRect.Height + DebugText.CharacterSize)) * 0.5F;
+            win.Draw(DebugText);
         }
     }
 }

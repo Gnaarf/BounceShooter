@@ -60,9 +60,10 @@
     <Compile Include="Code\Game\InGame\ColliderBodies\BodyManager.cs" />
     <Compile Include="Code\Game\InGame\ColliderBodies\LineSegmentBody.cs" />
     <Compile Include="Code\Game\InGame\ColliderBodies\PostCollisionUpdatable.cs" />
+    <Compile Include="Code\Game\InGame\ColliderBodies\Updateable.cs" />
     <Compile Include="Code\Game\InGame\Wall.cs" />
     <Compile Include="Code\Game\InGame\ColliderBodies\CircleBody.cs" />
-    <Compile Include="Code\Game\InGame\ColliderBodies\Updatable.cs" />
+    <Compile Include="Code\Game\InGame\ColliderBodies\Drawable.cs" />
     <Compile Include="Code\Game\InGame\ColliderBodies\Body.cs" />
     <Compile Include="Code\Game\InGame\InGameState.cs" />
     <Compile Include="Code\Game\InGame\Map.cs" />
@@ -108,6 +109,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Textures\pixel.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Textures\Player.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

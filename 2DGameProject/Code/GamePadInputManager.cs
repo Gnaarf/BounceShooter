@@ -14,7 +14,7 @@ namespace GameProject2D
         {
             public Vector2 leftStick;
             public Vector2 rightStick;
-            public float LTRT;
+            public float ltrt;
 
             public bool[] oldButton;
             public bool[] currentButton;
@@ -121,7 +121,7 @@ namespace GameProject2D
                     input.leftStick = 0.01F * new Vector2(Joystick.GetAxisPosition(index, Joystick.Axis.X), -Joystick.GetAxisPosition(index, Joystick.Axis.Y));
                     input.leftStick = AdjustDeadZone(input.leftStick);
 
-                    input.LTRT = Joystick.GetAxisPosition(index, Joystick.Axis.Z);
+                    input.ltrt = Joystick.GetAxisPosition(index, Joystick.Axis.Z);
 
                     padInputs[index] = input;
                 }
@@ -210,9 +210,9 @@ namespace GameProject2D
             if (!isInitialized) { Initialize(); }
 
             if (button == GamePadButton.LT)
-                return padInputs[padIndex].LTRT > 50;
+                return padInputs[padIndex].ltrt > 50;
             if (button == GamePadButton.RT)
-                return padInputs[padIndex].LTRT < -50;
+                return padInputs[padIndex].ltrt < -50;
 
             return padInputs[padIndex].currentButton[(int)button];
         }

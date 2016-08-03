@@ -105,6 +105,15 @@ namespace GameProject2D
             }
         }
 
+        public static void Draw(RenderWindow win, View view)
+        {
+            foreach (Body b in bodies)
+            {
+                if(b is Drawable)
+                    ((Drawable)b).Draw(win, view);
+            }
+        }
+
         public static void DebugDraw(RenderWindow win, View view)
         {
             foreach (Body b in bodies)

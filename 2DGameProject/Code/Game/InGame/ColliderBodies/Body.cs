@@ -83,9 +83,9 @@ namespace GameProject2D
         private static bool CheckCollision(CircleBody b1, CircleBody b2, ref Vector2 approximateCollisionPoint)
         {
             float radiusSum = b1.radius + b2.radius;
-            if(Vector2.distanceSqr(b1.midPoint, b2.midPoint) <= radiusSum * radiusSum)
+            if(Vector2.DistanceSqr(b1.midPoint, b2.midPoint) <= radiusSum * radiusSum)
             {
-                float distance = Vector2.distance(b1.midPoint, b2.midPoint);
+                float distance = Vector2.Distance(b1.midPoint, b2.midPoint);
                 float overlapSize = radiusSum - distance;
                 Vector2 direction = distance != 0 ? (b2.midPoint - b1.midPoint) / distance : Vector2.Zero;
                 approximateCollisionPoint = b1.midPoint + (b1.radius - overlapSize * 0.5F) * direction;
@@ -107,7 +107,7 @@ namespace GameProject2D
 
             float circleRadius = circle.radius;
             float circleRadiusSqr = circleRadius * circleRadius;
-            return Vector2.distanceSqr(circle.midPoint, approximateCollisionPoint) <= circleRadiusSqr;
+            return Vector2.DistanceSqr(circle.midPoint, approximateCollisionPoint) <= circleRadiusSqr;
         }
 
         private static bool CheckCollision(LineSegmentBody lineSeg1, LineSegmentBody lineSeg2, ref Vector2 approximateCollisionPoint)
@@ -118,14 +118,14 @@ namespace GameProject2D
             Vector2 lineSeg2End = lineSeg2.end;
 
             // check if parallel
-            if(Math.Abs(Vector2.dot(lineSeg1.direction, lineSeg2.direction)) == 1)
+            if(Math.Abs(Vector2.Dot(lineSeg1.direction, lineSeg2.direction)) == 1)
             {
                 // check if collinear
-                if (Vector2.dot(lineSeg2Start - lineSeg1Start, lineSeg1.direction.right) == 0)
+                if (Vector2.Dot(lineSeg2Start - lineSeg1Start, lineSeg1.direction.right) == 0)
                 {
                     //Projection of lineSeg2 onto lineSeg1's supporting line
-                    float projectedStart = Vector2.dot(lineSeg2Start - lineSeg1Start, lineSeg1.direction);
-                    float projectedEnd = Vector2.dot(lineSeg2End - lineSeg1Start, lineSeg1.direction);
+                    float projectedStart = Vector2.Dot(lineSeg2Start - lineSeg1Start, lineSeg1.direction);
+                    float projectedEnd = Vector2.Dot(lineSeg2End - lineSeg1Start, lineSeg1.direction);
 
                     // check for intersection
                     if (projectedStart < 0 && projectedEnd < 0 || projectedStart > lineSeg1.length && projectedEnd > lineSeg1.length)
@@ -145,18 +145,18 @@ namespace GameProject2D
                 Vector2 n1 = lineSeg1.direction.right;
 
                 // project lineSeg2 on n1's supporting line
-                float projectedStart = Vector2.dot(lineSeg2Start - lineSeg1Start, n1);
-                float projectedEnd = Vector2.dot(lineSeg2End - lineSeg1Start, n1);
+                float projectedStart = Vector2.Dot(lineSeg2Start - lineSeg1Start, n1);
+                float projectedEnd = Vector2.Dot(lineSeg2End - lineSeg1Start, n1);
 
                 // check if lineSeg2 is partly to lineSeg1's left side and right side
                 if ((projectedStart <= 0 && projectedEnd >= 0) || (projectedStart >= 0 && projectedEnd <= 0))
                 {
                     // find the position where lineSeg2 intersects lineSeg1's supporting line
                     float t = projectedStart / (projectedStart - projectedEnd);
-                    Vector2 intersectingPoint = Vector2.lerp(lineSeg2Start, lineSeg2End, t);
+                    Vector2 intersectingPoint = Vector2.Lerp(lineSeg2Start, lineSeg2End, t);
 
                     // check if intersectingPoint lies in lineSeg1
-                    float projectedIntersectingPoint = Vector2.dot(intersectingPoint - lineSeg1Start, lineSeg1.direction);
+                    float projectedIntersectingPoint = Vector2.Dot(intersectingPoint - lineSeg1Start, lineSeg1.direction);
                     if (0F <= projectedIntersectingPoint && projectedIntersectingPoint <= lineSeg1.length)
                         return true;
                 }

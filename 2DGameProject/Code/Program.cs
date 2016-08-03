@@ -22,7 +22,7 @@ namespace GameProject2D
         static void Main(string[] args)
         {
             // initialize window and view
-            win = new RenderWindow(new VideoMode((uint)windowSize.X, (uint)windowSize.Y), "Hadoken!!!");
+            win = new RenderWindow(new VideoMode((uint)windowSize.x, (uint)windowSize.y), "Hadoken!!!");
             view = new View();
             ResetView();
             gui = new GUI(win, view);
@@ -51,7 +51,7 @@ namespace GameProject2D
 
                 // update GameTime
                 GameTime.Update();
-                float deltaTime = (float)GameTime.EllapsedTime.TotalSeconds;
+                float deltaTime = (float)GameTime.ellapsedTime.TotalSeconds;
 
                 currentGameState = state.Update(deltaTime);
 

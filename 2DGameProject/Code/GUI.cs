@@ -14,7 +14,7 @@ namespace GameProject2D
             this.win = win;
         }
 
-        public void Draw<T>(T transformDrawable) where T : Transformable, Drawable
+        public void Draw<T>(T transformDrawable) where T : Transformable, SFML.Graphics.Drawable
         {
             Vector2 originalScale = transformDrawable.Scale;
             Vector2 originalPosition = transformDrawable.Position;

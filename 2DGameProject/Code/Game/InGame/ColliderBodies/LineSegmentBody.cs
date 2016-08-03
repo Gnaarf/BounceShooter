@@ -22,7 +22,7 @@ namespace GameProject2D
         public LineSegmentBody(Vector2 start, Vector2 end)
         {
             this.start = start;
-            this.length = Vector2.distance(start, end);
+            this.length = Vector2.Distance(start, end);
             this.direction = (end - start) / length;
 
             debugDrawShape = new RectangleShape(new Vector2(1, 1));
@@ -35,7 +35,7 @@ namespace GameProject2D
 
         public Vector2 NearestPositionOnSegment(Vector2 Position)
         {
-            float projectedLength = Vector2.dot(Position - start, direction);
+            float projectedLength = Vector2.Dot(Position - start, direction);
             
             if (projectedLength < 0)
             {
