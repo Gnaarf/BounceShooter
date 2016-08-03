@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SFML;
 using SFML.Graphics;
 using SFML.Window;
 
 namespace GameProject2D
 {
-    public class Bullet : CircleBody, Updateable, PostCollisionUpdatable
+    public class Bullet : CircleBody, Updateable, PostCollisionUpdatable, Drawable
     {
         int bounceCount;
 
@@ -19,17 +15,25 @@ namespace GameProject2D
 
         float _damage = 10F;
         public float damage { get { return _damage; } }
-        
+
+        List<LineSegmentBody> PrecurserLines = new List<LineSegmentBody>();
+
 
         List<Vector2> bounceOffNormals = new List<Vector2>();
-        
+
+        // draw-stuff
+        Sprite sprite;
+
         public Bullet(Vector2f position, Vector2 direction, int bounceCount)
-            : base(position, 5F)
+            : base(position, 1F)
         {
             this.bounceCount = bounceCount;
 
             this.speed = 500F;
             this.movement = direction * speed;
+
+            this.sprite = new Sprite(AssetManager.GetTexture(AssetManager.TextureName.Bullet));
+            this.sprite.Origin = ((Vector2)this.sprite.Texture.Size) * 0.5F;
         }
 
         public void Update(float deltaTime)
@@ -115,9 +119,10 @@ namespace GameProject2D
             movement = movement.normalized * speed;
         }
 
-        public void draw(RenderWindow win, View view)
+        public void Draw(RenderWindow win, View view)
         {
-            
+            sprite.Position = this.position;
+            win.Draw(sprite);
         }
 
         public void debugDraw(RenderWindow win, View view)

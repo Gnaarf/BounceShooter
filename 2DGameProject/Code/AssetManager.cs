@@ -20,6 +20,7 @@ public class AssetManager
     static void LoadTextures()
     {
         textures.Add(TextureName.Player, new Texture("Textures/Player.png"));
+        textures.Add(TextureName.Bullet, new Texture("Textures/Bullet.png"));
 
         textures.Add(TextureName.WhitePixel, new Texture("Textures/pixel.png"));
         textures.Add(TextureName.MainMenuBackground, new Texture("Textures/MainMenu_Background.jpg"));
@@ -29,6 +30,7 @@ public class AssetManager
     public enum TextureName
     {
         Player,
+        Bullet,
 
         WhitePixel,
         MainMenuBackground,

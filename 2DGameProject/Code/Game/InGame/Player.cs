@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SFML;
 using SFML.Graphics;
 using SFML.Window;
 
@@ -20,7 +15,8 @@ namespace GameProject2D
 
         public int index;
 
-        float chargedBounceCount = 0F;
+        public static readonly int MinBounces = 20;
+        float chargedBounceCount = MinBounces;
         float chargingSpeed = 10.2F;
 
         public static readonly float MaxLife = 100F;
@@ -114,10 +110,10 @@ namespace GameProject2D
             }   
             if(isShooting)
             { 
-                Bullet bullet = new Bullet(midPoint, forward, (int)chargedBounceCount + 1);
-                bullet.midPoint += forward * (radius + bullet.radius + 1);
+                Bullet bullet = new Bullet(midPoint, forward, (int)chargedBounceCount);
+                bullet.midPoint += forward * (radius + bullet.radius + 0.1F);
 
-                chargedBounceCount = 0F;
+                chargedBounceCount = MinBounces;
             }
         }
 
@@ -208,7 +204,7 @@ namespace GameProject2D
 
         private void RecieveDamage(float damage)
         {
-            life -= damage;
+            //life -= damage;
             if (isDead)
             {
                 reviveCountdown = ReviveTime;

@@ -33,6 +33,8 @@ namespace GameProject2D
             CreateWalls(CreatePolygon(new Vector2(500, 200), 3, 70F));
             CreateWalls(CreatePolygon(new Vector2(250, 280), 4, 30F));
             CreateWalls(CreatePolygon(new Vector2(500, 400), 5, 20F));
+
+            AddPlayer(0);
         }
 
         private void AddPlayer(uint i)

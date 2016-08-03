@@ -56,12 +56,23 @@ namespace GameProject2D
         /// <param name="body"></param>
         public static void Remove(Body body)
         {
+            if (body is Bullet)
+            {
+                bulletCount--;
+                Console.WriteLine(bulletCount);
+            }
             cachedForRemoval.Add(body);
         }
 
+        static int bulletCount = 0;
+
         public static void Add(Body body)
         {
-
+            if (body is Bullet)
+            {
+                bulletCount++;
+                Console.WriteLine(bulletCount);
+            }
             cachedForAddition.Add(body);
         }
 
@@ -109,8 +120,10 @@ namespace GameProject2D
         {
             foreach (Body b in bodies)
             {
-                if(b is Drawable)
+                if (b is Drawable)
+                {
                     ((Drawable)b).Draw(win, view);
+                }
             }
         }
 
